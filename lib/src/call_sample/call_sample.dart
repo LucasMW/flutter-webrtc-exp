@@ -1,11 +1,22 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'dart:core';
 import '../widgets/screen_select_dialog.dart';
 import 'signaling.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 
+//{"id":"317835","name":"Flutter macos(Lucass-MBP.Home)","user_agent":"flutter-webrtc/macos-plugin 0.0.1"}
+class MWMeetPeer {
+  final String id;
+  final String name;
+  final String userAgent;
+
+  MWMeetPeer(this.id, this.name, this.userAgent);
+}
+
 class CallSample extends StatefulWidget {
-  static String tag = 'call_sample';
+  static String tag = 'MWMeeT Call';
   final String host;
   CallSample({required this.host});
 
@@ -108,6 +119,7 @@ class _CallSampleState extends State<CallSample> {
     };
 
     _signaling?.onPeersUpdate = ((event) {
+      print(jsonEncode(event));
       setState(() {
         _selfId = event['self'];
         _peers = event['peers'];
@@ -283,6 +295,7 @@ class _CallSampleState extends State<CallSample> {
       appBar: AppBar(
         title: Text('P2P Call Sample' +
             (_selfId != null ? ' [Your ID ($_selfId)] ' : '')),
+        backgroundColor: Colors.deepPurple,
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.settings),
@@ -351,13 +364,15 @@ class _CallSampleState extends State<CallSample> {
                 ]),
               );
             })
-          : ListView.builder(
-              shrinkWrap: true,
-              padding: const EdgeInsets.all(0.0),
-              itemCount: (_peers != null ? _peers.length : 0),
-              itemBuilder: (context, i) {
-                return _buildRow(context, _peers[i]);
-              }),
+          : _peers.length > 1
+              ? ListView.builder(
+                  shrinkWrap: true,
+                  padding: const EdgeInsets.all(0.0),
+                  itemCount: (_peers != null ? _peers.length : 0),
+                  itemBuilder: (context, i) {
+                    return _buildRow(context, _peers[i]);
+                  })
+              : Text("Only you in this call"),
     );
   }
 }

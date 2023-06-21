@@ -225,6 +225,7 @@ class _DataChannelSampleState extends State<DataChannelSample> {
       appBar: AppBar(
         title: Text('Data Channel Sample' +
             (_selfId != null ? ' [Your ID ($_selfId)] ' : '')),
+        backgroundColor: Colors.deepPurple,
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.settings),
